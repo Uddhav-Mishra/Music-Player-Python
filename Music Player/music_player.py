@@ -57,7 +57,7 @@ def my_player(s):
         if flag==1:
             break
     if flag==0:
-        print("run kardo bhai")
+        print("run hoja bhai")
         query_string = urllib.parse.urlencode({"search_query": s})
         html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
         search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
@@ -65,12 +65,20 @@ def my_player(s):
 
 
 top = Tk()
-f=Frame(top,height=300,width=600 )
+top.wm_title("Music Player by Uddhav")
+f=Frame(top,height=200,width=300 )
 l1 = Label(top,text="Search ")
+l1.config(width=20)
+l1.config(font=("Courier",10))
 l1.pack(side=LEFT)
 e1=Entry(top,bd=5)
 
+e1.config(width=20)
+e1.config(font=("Courier",10))
+
 b1=Button(top,text="play",command=lambda:my_player(e1.get()))
+b1.config(height=2,width=20)
+b1.config(font=("Courier",10))
 e1.pack(side=LEFT)
 b1.pack(side=BOTTOM)
 f.pack()
