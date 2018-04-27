@@ -24,7 +24,7 @@ def my_player(s):
         j=50
         m = [[0 for x in range(j)] for y in range(i)]
         b = [0 for x in range(j)]
-        print (a)
+        #print (a)
         a_len = len(a)
         s_len = len(s)
         for i in range(a_len):
@@ -96,21 +96,21 @@ def play_on_youtube(s):
 def get_gui():
     top = Tk()
     top.wm_title("Audio/Video Finder")
-    f=Frame(top,height=200,width=300 )
+    f=Frame(top,height=200,width=80 )
     l1 = Label(top,text="Search ")
-    l1.config(width=20)
-    l1.config(font=("Courier",10))
+    l1.config(width=10)
+    l1.config(font=("Courier",20))
     l1.pack(side=LEFT)
     e1=Entry(top,bd=5)
 
-    e1.config(width=20)
-    e1.config(font=("Courier",10))
+    e1.config(width=30)
+    e1.config(font=("Courier",15))
 
-    b1=Button(top,text="play",command=lambda:my_player(e1.get()))
-    b1.config(height=2,width=20)
-    b1.config(font=("Courier",10))
+    b1=Button(top,text="Play",command=lambda:my_player(e1.get()))
+    b1.config(height=10,width=10)
+    b1.config(font=("Courier",20))
     e1.pack(side=LEFT)
-    b1.pack(side=BOTTOM)
+    b1.pack(side=RIGHT)
     f.pack()
     top.mainloop()
 
