@@ -107,7 +107,7 @@ def get_gui():
     e1.config(font=("Courier",15))
 
     b1=Button(top,text="Play",command=lambda:my_player(e1.get()))
-    b1.config(height=10,width=10)
+    b1.config(height=1,width=10)
     b1.config(font=("Courier",20))
     e1.pack(side=LEFT)
     b1.pack(side=RIGHT)
