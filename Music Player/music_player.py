@@ -3,31 +3,25 @@ from os import listdir
 from os.path import isfile, join
 from tkinter import *
 import webbrowser
-import urllib.parse
-import urllib.request
-import re
-import subprocess
-import getpass
+import urllib.parse,urllib.request
+import re,subprocess,getpass,random,ssl
 
 
+# list of directories in which audio/video files are present
+dir_list = [];
+dir_set = set([])
+
+# implements the search algo and playes the best matching file
 def my_player(s):
-
-    user_name = getpass.getuser()
-    direc = [];
-
-    if sys.platform == "win32" or sys.platform == "win64":
-        direc = [ ('C:/Users/'+user_name+'/Music') , ('C:/Users/'+user_name+'/Videos') ]
-    elif sys.platform == "darwin":
-        direc =[('/Users/'+user_name+'/Music'),('/Users/'+user_name+'/Movies')]
-
-    dir_size=len(direc)
+    random.shuffle(dir_list)
+    dir_size=len(dir_list)
     flag = 0
     for d in range(0,dir_size):
-        xx = direc[d]
+        xx = dir_list[d]
         a = [f for f in listdir(xx) if isfile(join(xx, f))]
         #print(a)
-        i = 500;
-        j=20
+        i = 800;
+        j=50
         m = [[0 for x in range(j)] for y in range(i)]
         b = [0 for x in range(j)]
         print (a)
@@ -51,8 +45,6 @@ def my_player(s):
                    else:
                        m[j][k] = max(m[j-1][k],m[j][k-1])
 
-            #print(len(a[i]),len(s),"len  ",m[len(a[i])+1][(len(s))+1])
-
             if (s_len == m[len(a[i])][(len(s))]):
                 flag=1
                 if sys.platform == "win32" or sys.platform == "win64" :
@@ -71,18 +63,39 @@ def my_player(s):
         play_on_youtube(s)
 
 
+# fetch all directories with possible audio/video files
+def get_all_dirs():
 
+    user_name = getpass.getuser()
+    if sys.platform == "win32" or sys.platform == "win64":
+        root_dir = ('C:/Users/'+user_name)
+    elif sys.platform == "darwin":
+        root_dir =('/Users/'+user_name)
+
+    for subdir, dirs, files in os.walk(root_dir):
+        for file in files:
+            if file.endswith('.mp3') or file.endswith('.mp4') or file.endswith('.mkv') or file.endswith('.avi') or file.endswith('.wkv'):
+                dir_set.add(subdir)
+
+    for dir_name in dir_set:
+        dir_list.append(dir_name)
+
+
+# in case the file is not present in system , play on youtube
 def play_on_youtube(s):
+
+    gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
     query_string = urllib.parse.urlencode({"search_query": s})
-    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string)
+    html_content = urllib.request.urlopen("http://www.youtube.com/results?" + query_string,context=gcontext)
     search_results = re.findall(r'href=\"\/watch\?v=(.{11})', html_content.read().decode())
-    webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open(
+    webbrowser.open(
         ("http://www.youtube.com/watch?v=" + search_results[0]))
 
 
+# deals with gui of the finder
 def get_gui():
     top = Tk()
-    top.wm_title("Audio/Video Finder by Uddhav")
+    top.wm_title("Audio/Video Finder")
     f=Frame(top,height=200,width=300 )
     l1 = Label(top,text="Search ")
     l1.config(width=20)
@@ -101,7 +114,6 @@ def get_gui():
     f.pack()
     top.mainloop()
 
+
+get_all_dirs()
 get_gui()
-
-
-#webbrowser.get("C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s").open("http://google.com")
