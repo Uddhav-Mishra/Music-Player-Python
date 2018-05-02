@@ -71,11 +71,25 @@ def get_all_dirs():
         root_dir = ('C:/Users/'+user_name)
     elif sys.platform == "darwin":
         root_dir =('/Users/'+user_name)
+    file_path = (root_dir + '/py_music_player_048.txt')
+    if os.path.exists(file_path):
 
-    for subdir, dirs, files in os.walk(root_dir):
-        for file in files:
-            if file.endswith('.mp3') or file.endswith('.mp4') or file.endswith('.mkv') or file.endswith('.avi') or file.endswith('.wkv'):
-                dir_set.add(subdir)
+        with open(file_path) as fp:
+            line = fp.readline()
+            cnt = 1
+            while line:
+                dir_set.add(line.strip())
+                line = fp.readline()
+                cnt += 1
+    else:
+        for subdir, dirs, files in os.walk(root_dir):
+            for file in files:
+                if file.endswith('.mp3') or file.endswith('.mp4') or file.endswith('.mkv') or file.endswith('.avi') or file.endswith('.wkv'):
+                    dir_set.add(subdir)
+        f = open(file_path, "w+")
+        for dir_names in dir_set:
+            f.write(dir_names+'\n')
+
 
     for dir_name in dir_set:
         dir_list.append(dir_name)
@@ -116,4 +130,5 @@ def get_gui():
 
 
 get_all_dirs()
+
 get_gui()
